@@ -1,0 +1,32 @@
+{
+  "manifest_version": 3,
+  "name": "WebTrans - 網頁翻譯",
+  "version": "1.0.1",
+  "description": "整頁翻譯 + 選取文字懸浮翻譯，預設目標語言：繁體中文",
+  "permissions": ["activeTab", "scripting", "storage"],
+  "host_permissions": ["https://translate.googleapis.com/*", "<all_urls>"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

@@ -1,0 +1,71 @@
+/* content.css - floating tooltip + translated text font fallback */
+
+#wt-tooltip {
+  position: fixed;
+  z-index: 2147483647;
+  max-width: 320px;
+  background: #202124;
+  color: #fff;
+  font-family: 'Segoe UI', 'Noto Sans', 'Noto Sans CJK TC', 'Microsoft YaHei', system-ui, -apple-system, sans-serif;
+  font-size: 14px;
+  line-height: 1.5;
+  padding: 10px 14px;
+  border-radius: 8px;
+  box-shadow: 0 4px 16px rgba(0,0,0,.35);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .15s;
+  word-break: break-word;
+}
+#wt-tooltip.visible { opacity: 1; }
+#wt-tooltip .wt-src {
+  font-size: 11px;
+  color: #aaa;
+  margin-bottom: 4px;
+}
+
+#wt-fab {
+  all: initial;
+  box-sizing: border-box;
+  position: fixed !important;
+  right: 16px !important;
+  bottom: 16px !important;
+  z-index: 2147483646 !important;
+  width: 36px !important;
+  height: 36px !important;
+  border: none !important;
+  border-radius: 50% !important;
+  background: linear-gradient(135deg, #1a73e8, #0f9d58) !important;
+  color: #fff !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  font-family: 'Segoe UI', 'Noto Sans', 'Noto Sans CJK TC', 'Microsoft YaHei', system-ui, -apple-system, sans-serif !important;
+  font-size: 13px !important;
+  font-weight: 700 !important;
+  line-height: 1 !important;
+  text-align: center !important;
+  white-space: nowrap !important;
+  letter-spacing: 0 !important;
+  cursor: grab !important;
+  box-shadow: 0 4px 12px rgba(26, 115, 232, .40) !important;
+  opacity: 0.75;
+  transition: opacity .15s, box-shadow .15s;
+  user-select: none;
+  touch-action: none;
+}
+
+#wt-fab:hover {
+  opacity: 1;
+  box-shadow: 0 6px 16px rgba(26, 115, 232, .55);
+}
+
+#wt-fab.wt-dragging {
+  cursor: grabbing;
+  opacity: 1;
+  transition: none;
+}
+
+#wt-fab[data-state="restore"] {
+  background: linear-gradient(135deg, #ea4335, #fbbc04);
+}
