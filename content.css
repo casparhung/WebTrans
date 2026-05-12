@@ -28,8 +28,8 @@
   all: initial;
   box-sizing: border-box;
   position: fixed !important;
-  right: 16px !important;
-  bottom: 16px !important;
+  right: 16px;
+  bottom: 16px;
   z-index: 2147483646 !important;
   width: 36px !important;
   height: 36px !important;
