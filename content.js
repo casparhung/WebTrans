@@ -15,6 +15,8 @@ let isTranslating = false;    // true while translatePage is running
 let cancelRequested = false;  // set to true to abort in-progress translation
 let tooltip = null;
 let tooltipTimeout = null;
+let tooltipAutoClose = null;
+let skipNextMouseUp = false;
 let fab = null;
 let mutationObserver = null;
 let isBusyTranslating = false; // pause observer while we write to DOM
@@ -80,6 +82,32 @@ function storage_get(defaults) {
 }
 
 // ------------------------------------------------------------------
+// Get page background color for popup theming
+// ------------------------------------------------------------------
+function getPageDominantColor() {
+  // Try to get background color from body or html
+  let color = window.getComputedStyle(document.body).backgroundColor ||
+              window.getComputedStyle(document.documentElement).backgroundColor;
+  
+  // If transparent or rgba, try to find a non-transparent background from parent elements
+  if (!color || color === 'rgba(0, 0, 0, 0)' || color === 'transparent') {
+    let el = document.body;
+    while (el && (color === 'transparent' || color === 'rgba(0, 0, 0, 0)' || !color)) {
+      color = window.getComputedStyle(el).backgroundColor;
+      el = el.parentElement;
+      if (!el || el === document.documentElement) break;
+    }
+  }
+  
+  // Default fallback
+  if (!color || color === 'transparent' || color === 'rgba(0, 0, 0, 0)') {
+    color = '#ffffff';
+  }
+  
+  return color;
+}
+
+// ------------------------------------------------------------------
 // Message listener
 // ------------------------------------------------------------------
 chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
@@ -95,6 +123,9 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
   } else if (msg.type === 'RESTORE_PAGE') {
     restorePage();
     sendResponse({ ok: true });
+  } else if (msg.type === 'GET_PAGE_COLOR') {
+    const color = getPageDominantColor();
+    sendResponse({ color });
   }
 });
 
@@ -102,6 +133,10 @@ chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
 // Selection tooltip
 // ------------------------------------------------------------------
 function onMouseUp(e) {
+  if (skipNextMouseUp) {
+    skipNextMouseUp = false;
+    return;
+  }
   if (!selectionEnabled) return;
   const sel = window.getSelection();
   const text = sel ? sel.toString().trim() : '';
@@ -245,7 +280,19 @@ function showTooltip(x, y, src, trans) {
   tooltip.innerHTML =
     '<div class="wt-src">' + escapeHtml(src.substring(0, 60)) + (src.length > 60 ? '...' : '') + '</div>' +
     escapeHtml(trans);
+
+  // Detect page brightness and apply contrast theme
+  const pageBg = window.getComputedStyle(document.body).backgroundColor ||
+                 window.getComputedStyle(document.documentElement).backgroundColor;
+  const m = pageBg && pageBg.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+  const brightness = m ? (Number(m[1]) * 299 + Number(m[2]) * 587 + Number(m[3]) * 114) / 1000 : 255;
+  tooltip.classList.toggle('wt-light', brightness < 128);
+
   tooltip.classList.add('visible');
+
+  // Auto-close after 20 seconds
+  clearTimeout(tooltipAutoClose);
+  tooltipAutoClose = setTimeout(() => hideTooltip(), 20000);
 
   const vw = window.innerWidth, vh = window.innerHeight;
   let left = x + 12, top = y + 12;
@@ -259,6 +306,10 @@ function showTooltip(x, y, src, trans) {
 
 function hideTooltip() {
   clearTimeout(tooltipTimeout);
+  clearTimeout(tooltipAutoClose);
+  if (tooltip && tooltip.classList.contains('visible')) {
+    skipNextMouseUp = true;
+  }
   if (tooltip) tooltip.classList.remove('visible');
 }
 

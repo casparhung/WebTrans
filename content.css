@@ -12,6 +12,7 @@
   padding: 10px 14px;
   border-radius: 8px;
   box-shadow: 0 4px 16px rgba(0,0,0,.35);
+  border: 3px solid #ffc107;
   pointer-events: none;
   opacity: 0;
   transition: opacity .15s;
@@ -22,6 +23,16 @@
   font-size: 11px;
   color: #aaa;
   margin-bottom: 4px;
+}
+
+/* Light theme: used on dark pages for high contrast */
+#wt-tooltip.wt-light {
+  background: #ffffff;
+  color: #111111;
+  box-shadow: 0 4px 16px rgba(0,0,0,.5);
+}
+#wt-tooltip.wt-light .wt-src {
+  color: #666666;
 }
 
 #wt-fab {

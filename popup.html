@@ -139,6 +139,7 @@
       .ai-status.success { background: #e8f5ec; color: #166534; }
       .ai-status.error { background: #fdecec; color: #b42318; }
       .ai-status.pending { background: #eef4ff; color: #1d4ed8; }
+      
   </style>
 </head>
 <body>
@@ -146,6 +147,16 @@
     <span>&#127759;</span> WebTrans
   </header>
   <div class="body">
+    <div class="toggle-row">
+      <span class="toggle-label">選取文字懸浮翻譯</span>
+      <label class="toggle">
+        <input type="checkbox" id="selectionToggle" checked />
+        <span class="slider"></span>
+      </label>
+    </div>
+
+    <hr />
+
     <label>目標語言</label>
     <select id="targetLang">
       <option value="zh-TW">繁體中文</option>
@@ -157,14 +168,6 @@
       <option value="de">德文</option>
       <option value="es">西班牙文</option>
     </select>
-
-    <div class="toggle-row">
-      <span class="toggle-label">選取文字懸浮翻譯</span>
-      <label class="toggle">
-        <input type="checkbox" id="selectionToggle" checked />
-        <span class="slider"></span>
-      </label>
-    </div>
 
     <hr />
 
